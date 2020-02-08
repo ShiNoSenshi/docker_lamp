@@ -1,0 +1,33 @@
+version: "3.3"
+services:
+  php:
+    build: './php/'
+    networks:
+      - backend
+    volumes:
+      - ./public_html:/var/www/html/
+  apache:
+    build: './apache/'
+    depends_on:
+      - php
+      - mysql
+    networks:
+      - frontend
+      - backend
+    ports:
+      - "8080:80"
+    volumes:
+      - ./public_html:/var/www/html/
+  mysql:
+    image: mysql:8.0.19
+    networks:
+      - backend
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+    volumes:
+      - ./database:/var/lib/mysql
+    ports:
+      - "3306:3306"
+networks:
+  frontend:
+  backend:
